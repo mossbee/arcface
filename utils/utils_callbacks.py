@@ -7,7 +7,23 @@ import torch
 
 from eval import verification
 from utils.utils_logging import AverageMeter
-from torch.utils.tensorboard import SummaryWriter
+# from torch.utils.tensorboard import SummaryWriter
+# Safe SummaryWriter that avoids TensorFlow dependency
+import os
+os.environ.setdefault("TENSORBOARD_NO_TF", "1")
+try:
+    from torch.utils.tensorboard import SummaryWriter as _SummaryWriter
+    SummaryWriter = _SummaryWriter
+except Exception:
+    try:
+        from tensorboardX import SummaryWriter as _XSummaryWriter
+        SummaryWriter = _XSummaryWriter
+    except Exception:
+        class SummaryWriter:
+            def __init__(self, *args, **kwargs): pass
+            def add_scalar(self, *args, **kwargs): pass
+            def add_scalars(self, *args, **kwargs): pass
+            def close(self, *args, **kwargs): pass
 from torch import distributed
 
 
@@ -34,7 +50,8 @@ class CallBackVerification(object):
             logging.info('[%s][%d]Accuracy-Flip: %1.5f+-%1.5f' % (self.ver_name_list[i], global_step, acc2, std2))
 
             self.summary_writer: SummaryWriter
-            self.summary_writer.add_scalar(tag=self.ver_name_list[i], scalar_value=acc2, global_step=global_step, )
+            if self.summary_writer is not None:
+                self.summary_writer.add_scalar(tag=self.ver_name_list[i], scalar_value=acc2, global_step=global_step)
             if self.wandb_logger:
                 import wandb
                 self.wandb_logger.log({
