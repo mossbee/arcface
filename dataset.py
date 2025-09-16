@@ -140,6 +140,7 @@ class MXFaceDataset(Dataset):
         super(MXFaceDataset, self).__init__()
         self.transform = transforms.Compose(
             [transforms.ToPILImage(),
+             transforms.Resize((112, 112)),
              transforms.RandomHorizontalFlip(),
              transforms.ToTensor(),
              transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
