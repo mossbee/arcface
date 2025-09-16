@@ -31,4 +31,4 @@ config.warmup_epoch = 0
 config.val_targets = ['lfw', 'cfp_fp', 'agedb_30']
 
 # NEW: path to your pretrained backbone weights
-config.pretrained_backbone = "/kaggle/input/nd-twin-448-train/ms1mv3_arcface_r50_fp16.pth"  # or model.pt
+config.pretrained_backbone = "/kaggle/input/nd-twin-448-train/ms1mv2_arcface_r50_fp16.pth"  # or model.pt
