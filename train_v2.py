@@ -12,9 +12,25 @@ from lr_scheduler import PolynomialLRWarmup
 from partial_fc_v2 import PartialFC_V2
 from torch import distributed
 from torch.utils.data import DataLoader
-from torch.utils.tensorboard import SummaryWriter
+# Safe SummaryWriter that avoids TensorFlow dependency on Kaggle
+import os
+os.environ.setdefault("TENSORBOARD_NO_TF", "1")
+try:
+    from torch.utils.tensorboard import SummaryWriter as _SummaryWriter
+    SummaryWriter = _SummaryWriter
+except Exception:
+    try:
+        from tensorboardX import SummaryWriter as _XSummaryWriter
+        SummaryWriter = _XSummaryWriter
+    except Exception:
+        class SummaryWriter:
+            def __init__(self, *args, **kwargs): pass
+            def add_scalar(self, *args, **kwargs): pass
+            def add_scalars(self, *args, **kwargs): pass
+            def close(self, *args, **kwargs): pass
 from utils.utils_callbacks import CallBackLogging, CallBackVerification
 from utils.utils_config import get_config
+
 from utils.utils_distributed_sampler import setup_seed
 from utils.utils_logging import AverageMeter, init_logging
 from torch.distributed.algorithms.ddp_comm_hooks.default_hooks import fp16_compress_hook
