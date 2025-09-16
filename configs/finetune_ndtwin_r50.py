@@ -15,7 +15,7 @@ config.lr = 0.02
 config.momentum = 0.9
 config.weight_decay = 5e-4
 
-config.batch_size = 48
+config.batch_size = 256
 config.verbose = 2000
 config.dali = False
 config.dali_aug = False
@@ -26,7 +26,7 @@ config.rec = "/kaggle/input/nd-twin-448-train"
 # Set these for your dataset
 config.num_classes = 1234              # number of identities (subfolders for ImageFolder)
 config.num_image = 567890              # total training images
-config.num_epoch = 10
+config.num_epoch = 50
 config.warmup_epoch = 0
 config.val_targets = ['lfw', 'cfp_fp', 'agedb_30']
 
